@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 from PIL import Image
 import os
@@ -51,6 +51,13 @@ def upload_sprite():
     except Exception as e:
         logging.error(f"Error during upload: {e}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/uploads/<path:filename>')
+def serve_uploaded_file(filename):
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    response = send_file(file_path)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 if __name__ == "__main__":
     app.run(port=8000, debug=True)

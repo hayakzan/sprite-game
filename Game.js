@@ -3,12 +3,14 @@ import Phaser from "phaser";
 
 function Game({ spritePath }) {
   useEffect(() => {
-    // Create a Phaser game instance
+    console.log("Sprite Path:", spritePath);
+
     const config = {
       type: Phaser.AUTO,
       width: 800,
       height: 600,
-      parent: "phaser-container", // Attach to this DOM element
+      parent: "phaser-container",
+      backgroundColor: "#ffffff", // White background to ensure sprite visibility
       physics: {
         default: "arcade",
         arcade: {
@@ -17,23 +19,25 @@ function Game({ spritePath }) {
       },
       scene: {
         preload: function () {
-          this.load.image("sprite", spritePath); // Dynamically load the sprite
+          console.log("Preloading sprite from:", spritePath);
+          this.load.image("sprite", spritePath);
         },
         create: function () {
-          this.add.image(400, 300, "sprite"); // Display the sprite
+          console.log("Creating sprite...");
+          const sprite = this.add.image(400, 300, "sprite");
+          console.log("Sprite position:", sprite.x, sprite.y);
         },
       },
     };
 
     const game = new Phaser.Game(config);
 
-    // Clean up the game instance when the component unmounts
     return () => {
       game.destroy(true);
     };
   }, [spritePath]);
 
-  return <div id="phaser-container"></div>; // This is where the Phaser game will render
+  return <div id="phaser-container"></div>;
 }
 
 export default Game;
